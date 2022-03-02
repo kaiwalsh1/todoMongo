@@ -60,6 +60,17 @@ const userSchema = new Schema({
 
 });
 
+// model methods
+userSchema.statics.findByRole = async function(role) {
+	return await this.find({ role });
+}
+
+// instance methods
+userSchema.methods.greeting = function() {
+	// this === the single doc that is calling the greeting function
+	console.log(`Hi my username is ${this.username} my role is ${this.role}`);
+}
+
 const User = model('User', userSchema);
 
 module.exports = User;
