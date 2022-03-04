@@ -140,54 +140,58 @@ const seedDb = async () => {
 	const [like1, like2] = await Like.insertMany(likesToCreate);
 	const firstBlog = blogs[0];
 
+
+// -1 descending (from highest to lowest)
+// 1 ascending (from lowest to highest) 
+// .limit()
+// .skip() - skip the first one
+// limit + skip - used for pagination
+	const blogs = await Blog.find({}).sort({ description: -1 }).limit(3).skip(1);
+	console.log(blogs);
+
 	// How to add a like
-	const updatedBlog = await Blog.findByIdAndUpdate(
-		firstBlog._id,
-		{
-			$addToSet: {
-				likeIds: [ like1, like2 ]
-			},
-		},
-		{
-			new: true,
-		}
-	).populate({
-		path: 'likeIds',
-		populate: 'userId'
-	});
+	// // const updatedBlog = await Blog.findByIdAndUpdate(
+	// // 	firstBlog._id,
+	// // 	{
+	// // 		$addToSet: {
+	// // 			likeIds: [ like1, like2 ]
+	// // 		},
+	// // 	},
+	// // 	{
+	// // 		new: true,
+	// // 	}
+	// // ).populate({
+	// // 	path: 'likeIds',
+	// // 	populate: 'userId'
+	// // });
 
+	// // console.log('After adding', updatedBlog.likeIds);
 
+	// const updatedBlogPartTwo = await Blog.findByIdAndUpdate(
+	// 	firstBlog._id,
+	// 	{
+	// 		$pull: {
+	// 			likeIds: like1._id,
+	// 		},
+	// 	},
+	// 	{
+	// 		new: true,
+	// 	}
+	// ).populate([
+	// 	{
+	// 		path: 'likeIds',
+	// 		populate: 'userId',
+	// 	},
+	// 	{
+	// 		path: 'userId',
+	// 		populate: 'petIds',
+	// 	}
+	// ]);
 
-	console.log('After adding', updatedBlog.likeIds);
-
-    const updatedBlogPartTwo = await Blog.findByIdAndUpdate(
-		firstBlog._id,
-		{
-			$pull: {
-				likeIds: like1._id,
-			},
-		},
-		{
-			new: true,
-		}
-	).populate({
-		path: 'likeIds',
-		populate: 'userId'
-	});
-
-    console.log('After removing', updatedBlogPartTwo.likeIds);
-
-	// await firstBlog.save();
-
-	// console.log(firstBlog);
-
-
-
-
-	//
-	// const employees = await User.findByRole('Employee');
-	//
-	// employees.forEach(employee => employee.greeting());
+	// console.log(updatedBlogPartTwo)
+	// // console.log('After removing', updatedBlogPartTwo.likeIds);
+	// // const employees = await User.findByRole('Employee');
+	// // employees.forEach(employee => employee.greeting());
 
 	process.exit(0);
 };
